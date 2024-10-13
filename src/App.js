@@ -1,24 +1,43 @@
-import logo from './logo.svg';
+
 import './App.css';
+import AppBarComponent from './components/AppBarComponent';
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import HeroSection from './components/HeroSection';
+import NoPage from './components/NoPage';
+import AboutUs from './components/AboutUs';
+import ContactUs from './components/ContactUs';
+import LoginPage from './components/LoginPage';
+import SignupPage from './components/SignupPage';
+import Dashboard from './components/Dashboard';
+import UserProfile from './components/UserProfile';
+import MissingPersonReport from './components/MissingPersonReport';
+import SearchPerson from './components/SearchPerson';
+import FlagLocation from './components/FlagLocation';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+<>
+    <BrowserRouter>
+    
+<AppBarComponent/>
+
+      <Routes>
+      <Route path="/" element={<HeroSection />} />
+      <Route path="/contact" element={<ContactUs />} />          
+      <Route path="/about" element={<AboutUs />} />
+      <Route path="/login" element={<LoginPage />} />
+      <Route path="/signup" element={<SignupPage />} />
+      <Route path="/dashboard" element={<Dashboard />} />
+      <Route path="/profile" element={<UserProfile />} />
+      <Route path="/report" element={<MissingPersonReport />} />
+      <Route path="/search" element={<SearchPerson />} />
+      <Route path="/flag" element={<FlagLocation />} />
+      <Route path="*" element={<NoPage />} />
+      
+      </Routes>
+    </BrowserRouter>
+    
+</>
   );
 }
 
