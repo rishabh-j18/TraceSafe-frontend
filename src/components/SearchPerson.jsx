@@ -115,10 +115,9 @@ const SearchPerson = () => {
                   More Details
                 </Button>
                 <Button
-                  endIcon={<PlaylistAddIcon />}
-                  onClick={() => (window.location.href = `/person/${index}`)}
+                sx={{backgroundColor:"#147ae4",color:"white",margin:'10px'}}
                 >
-                  More Details
+                  Flag Location
                 </Button>
               </Box>
             </Card>

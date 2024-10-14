@@ -23,3 +23,9 @@ export const updateUserProfile = async (formData) => {
     });
   };
   
+  export const submitMissingPersonReport = async (formData) => {
+    return apiRequest(`${BACKEND}/report-missing`, 'POST', formData, {
+      'Content-Type': 'multipart/form-data',
+    });
+  };
+  

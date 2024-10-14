@@ -13,6 +13,9 @@ import {
 } from "@mui/material";
 import { motion } from "framer-motion";
 import { styled } from "@mui/system";
+import { submitMissingPersonReport } from "../services/apiCalls";
+import { toast,ToastContainer } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const steps = [
   "Personal Information",
@@ -96,14 +99,42 @@ const MissingPersonReport = () => {
     });
   };
 
-  const handleSubmit = (e) => {
+  const navigate = useNavigate();
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    // Submit form data
-    console.log(formData);
+    
+    // Create a FormData object to hold the form values
+    const data = new FormData();
+  
+    // Append all form fields to FormData
+    Object.entries(formData).forEach(([key, value]) => {
+      data.append(key, value);
+    });
+  
+    // Submit form data using your API call
+    try {
+      const response = await submitMissingPersonReport(data);
+  
+      if (response.status === 200) {
+        toast.success('Report submitted successfully');
+        setTimeout(() => {
+          
+          navigate('/');
+        }, 6000);
+      } else {
+        toast.error(response.message || 'Error occurred, try again');
+      }
+    } catch (error) {
+      toast.error('Submission failed, please try again');
+    }
   };
+  
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+
+      <ToastContainer/>
       <Typography variant="h4" align="center" gutterBottom>
         Report a Missing Person
       </Typography>
