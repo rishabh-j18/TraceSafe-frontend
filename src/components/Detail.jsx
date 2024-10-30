@@ -1,29 +1,32 @@
 import React, { useEffect, useState } from "react";
-import {
-  Container,
-  TextField,
-  Button,
-  Grid,
-  Card,
-  CardContent,
-  Typography,
-  Box,
-} from "@mui/material";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
+// Import React and other hooks
+
+// Import Material-UI components
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
+import CardContent from '@mui/material/CardContent';
+import Typography from '@mui/material/Typography';
+import Box from '@mui/material/Box';
+import Button from '@mui/material/Button';
+import PlaylistAddIcon from '@mui/icons-material/PlaylistAdd';
+
+// If you're using react-router-dom
+import { useNavigate } from 'react-router-dom'; // For navigation
 import { getMissingPerson } from "../services/apiCalls";
-import { useNavigate } from "react-router-dom";
 
-const SearchPerson = () => {
-  const [searchQuery, setSearchQuery] = useState("");
-  const [results, setResults] = useState([]); // To store filtered results
-  const [allPersons, setAllPersons] = useState([]); // To store all persons data
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
 
-  const navigate= useNavigate();
 
-  // Fetching the data from the backend using getMissingPerson() when the component mounts
-  useEffect(() => {
+const Detail = () => {
+
+    const navigate = useNavigate();
+    const [results, setResults] = useState([]); // To store filtered results
+    const [allPersons, setAllPersons] = useState([]); // To store all persons data
+    const [loading, setLoading] = useState(false);
+    const [error, setError] = useState("");
+  
+
+ // Fetching the data from the backend using getMissingPerson() when the component mounts
+ useEffect(() => {
     const fetchMissingPersons = async () => {
       setLoading(true);
       setError(""); // Reset error state
@@ -47,39 +50,11 @@ const SearchPerson = () => {
     fetchMissingPersons();
   }, []);
 
-  // Function to handle search
-  const handleSearch = () => {
-    const filteredResults = allPersons.filter(
-      (person) =>
-        person.fullName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-        person.aadhar.includes(searchQuery)
-    );
 
-    setResults(filteredResults); // Update results based on the search query
-  };
+  return
+  <>
 
-  return (
-    <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
-      <Typography variant="h5" align="center" gutterBottom>
-        Search for a Person
-      </Typography>
-      <Box display="flex" justifyContent="center" mb={4}>
-        <TextField
-          label="Search by Name or Aadhaar"
-          variant="outlined"
-          value={searchQuery}
-          onChange={(e) => setSearchQuery(e.target.value)}
-          sx={{ mr: 2, width: "40%" }}
-        />
-        <Button variant="contained" onClick={handleSearch} disabled={loading}>
-          {loading ? "Searching..." : "Search"}
-        </Button>
-      </Box>
-
-      {error && <Typography color="red" align="center">{error}</Typography>}
-
-      <Grid container spacing={4} justifyContent="center" alignItems="center">
-        {results.length > 0 ? (
+{results.length > 0 ? (
           results.map((person) => (
             <Grid item xs={14} sm={12} md={8} key={person._id}> {/* Using person._id as key */}
               <Card>
@@ -142,9 +117,8 @@ const SearchPerson = () => {
             {loading ? "Loading..." : "No results found."}
           </Typography>
         )}
-      </Grid>
-    </Container>
-  );
+
+  </>
 };
 
-export default SearchPerson;
+export default Detail;

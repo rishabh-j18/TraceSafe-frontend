@@ -15,7 +15,8 @@ import {
 import EditIcon from "@mui/icons-material/Edit";
 import AddPhotoAlternateIcon from "@mui/icons-material/AddPhotoAlternate";
 import { updateUserProfile } from "../services/apiCalls";
-import { toast } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 const UserProfile = () => {
   const [coverPhoto, setCoverPhoto] = useState(null);
@@ -69,6 +70,7 @@ const UserProfile = () => {
 
   const handleSave = async (e) => {
     e.preventDefault();
+    setLoading(true);
 
     try {
       const formData = new FormData();
@@ -84,8 +86,10 @@ const UserProfile = () => {
       if (coverPhoto) formData.append("coverPhoto", coverPhoto);
 
       const response = await updateUserProfile(formData);
-
+    
+      console.log(response.data.updatedUser);
       if (response.status === 200) {
+        localStorage.setItem('userData',JSON.stringify(response.data.updatedUser));
         toast.success("Profile updated successfully!");
       } else {
         toast.error("Error occurred, try again.");
@@ -93,6 +97,8 @@ const UserProfile = () => {
     } catch (err) {
       console.error("Error updating profile:", err);
       toast.error("An error occurred while saving.");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -124,7 +130,7 @@ const UserProfile = () => {
         height: "100vh",
         backgroundColor: "#f5f5f5",
       }}
-    >
+    ><ToastContainer/>
       <Card sx={{ width: "80%", maxWidth: "800px" }}>
         <CardContent>
           {/* Top Section */}
@@ -236,6 +242,9 @@ const UserProfile = () => {
           </Box>
         </CardContent>
       </Card>
+
+      {/* Toast Container */}
+      <ToastContainer position="top-right" autoClose={3000} hideProgressBar />
     </Box>
   );
 };

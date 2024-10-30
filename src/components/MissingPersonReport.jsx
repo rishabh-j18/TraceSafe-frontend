@@ -31,6 +31,7 @@ const MissingPersonReport = () => {
     fullName: "",
     nickname: "",
     dateOfBirth: "",
+    aadhar:"",
     gender: "",
     photo: null,
     height: "",
@@ -77,6 +78,7 @@ const MissingPersonReport = () => {
       fullName: "",
       nickname: "",
       dateOfBirth: "",
+      aadhar:"",
       gender: "",
       photo: null,
       height: "",
@@ -184,7 +186,17 @@ const MissingPersonReport = () => {
                   required
                   InputLabelProps={{ shrink: true }}
                   margin="normal"
-                />
+                /><TextField
+                fullWidth
+                type="number"
+                label="Aadhar number"
+                name="aadhar"
+                value={formData.aadhar}
+                onChange={handleInputChange}
+                required
+                InputLabelProps={{ shrink: true }}
+                margin="normal"
+              />
                 <TextField
                   fullWidth
                   select

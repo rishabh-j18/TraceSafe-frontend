@@ -1,16 +1,20 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   Container, TextField, Button, Typography, Box, Grid 
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import GoogleMapReact from 'google-map-react';
-import axios from 'axios'; // Ensure axios is installed
+import axios from 'axios';
+import { flagMissing } from '../services/apiCalls';
+import { toast, ToastContainer } from 'react-toastify';
 
 const FlagLocation = () => {
   const [location, setLocation] = useState('');
-  const [coordinates, setCoordinates] = useState({ lat: 37.7749, lng: -122.4194 }); // Default: San Francisco
+  const [coordinates, setCoordinates] = useState({ lat: 26.81277, lng:80.909  }); // Default: San Francisco
   const [formData, setFormData] = useState({
     location: '',
+    coordinates: { lat: '', lng: '' }, // Store coordinates as JSON
     dateTime: '',
     photos: [],
     video: null,
@@ -22,12 +26,12 @@ const FlagLocation = () => {
     additionalNotes: '',
   });
 
-  // Handle input changes
+  const navigate = useNavigate();
+
   const handleInputChange = async (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
 
-    // If the field is 'location', trigger Geocoding API call
     if (name === 'location') {
       setLocation(value);
       if (value.trim()) {
@@ -36,7 +40,6 @@ const FlagLocation = () => {
     }
   };
 
-  // Fetch coordinates using Google Maps Geocoding API
   const fetchCoordinates = async (address) => {
     try {
       const response = await axios.get(
@@ -44,7 +47,7 @@ const FlagLocation = () => {
         {
           params: {
             address,
-            key: process.env.GOOGLE_MAPS_API_KEY, // Use environment variable
+            key: process.env.GOOGLE_MAPS_API_KEY,
           },
         }
       );
@@ -52,7 +55,11 @@ const FlagLocation = () => {
       const results = response.data.results;
       if (results.length > 0) {
         const { lat, lng } = results[0].geometry.location;
-        setCoordinates({ lat, lng }); // Update map coordinates
+        setCoordinates({ lat, lng }); // Update local state
+        setFormData((prevData) => ({
+          ...prevData,
+          coordinates: { lat, lng }, // Store coordinates in formData
+        }));
       } else {
         alert('Location not found. Please enter a valid address.');
       }
@@ -62,38 +69,36 @@ const FlagLocation = () => {
     }
   };
 
-  // Handle map clicks to get coordinates
   const handleMapClick = ({ lat, lng }) => {
-    const location = `${lat}, ${lng}`;
-    setFormData({ ...formData, location });
-    setCoordinates({ lat, lng }); // Update coordinates on map click
+    setCoordinates({ lat, lng });
+    setFormData((prevData) => ({
+      ...prevData,
+      coordinates: { lat, lng }, // Store clicked coordinates in formData
+    }));
   };
 
-  // Handle form submission
   const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
 
-    // Call the API to add coins (example)
     try {
-      const response = await fetch('http://your-backend-url/add-coins', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ reporterName: formData.reporterName }),
-      });
+      const response = await flagMissing(formData);
+      console.log(formData);
+      console.log(response);
 
-      const data = await response.json();
-      alert(data.message || 'Submission successful');
+      if (response.status === 200) {
+        toast.success('Submitted successfully');
+        setTimeout(() => navigate('/dashboard'), 6000);
+      } else {
+        toast.error(response.message || 'Error occurred, try again');
+      }
     } catch (error) {
-      console.error('Error adding coins:', error);
-      alert('An error occurred while submitting.');
+      toast.error('Submission failed, please try again');
     }
   };
 
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
+      <ToastContainer />
       <Typography variant="h4" align="center" gutterBottom>
         Flag Found Person
       </Typography>
@@ -120,7 +125,7 @@ const FlagLocation = () => {
               <Box height="300px" mb={2}>
                 <GoogleMapReact
                   bootstrapURLKeys={{ key: process.env.GOOGLE_MAPS_API_KEY }}
-                  center={coordinates} // Use the updated coordinates here
+                  center={coordinates}
                   defaultZoom={11}
                   onClick={handleMapClick}
                 />
