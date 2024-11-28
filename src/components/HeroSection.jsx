@@ -8,11 +8,11 @@ const HeroSection = () => {
   const isMobile = useMediaQuery(theme.breakpoints.down('sm'));
 
   const photos = [
-    'https://via.placeholder.com/100', // Replace with actual URLs of missing persons' photos
-    'https://via.placeholder.com/100',
-    'https://via.placeholder.com/100',
-    'https://via.placeholder.com/100',
-    'https://via.placeholder.com/100'
+    'https://media.istockphoto.com/id/1300730526/vector/missing-poster-doodle.jpg?s=612x612&w=0&k=20&c=RShjoMerodavlJ16DowLvXcfJJ3kkql96_9_l3xnwx0=', // Replace with actual URLs of missing persons' photos
+    'https://images.squarespace-cdn.com/content/v1/5b8709309f87706a308b674a/1630432472107-419TL4L1S480Z0LIVRYA/Missing.jpg',
+    'https://le-cdn.hibuwebsites.com/f511e87f7167472dad794fd50a9d00d9/dms3rep/multi/opt/blog25-640w.jpg',
+    'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTLXDIAPj3plkvvdQPGcmbTcQ7k_9rD6l96RQ&s',
+    'https://img.freepik.com/premium-vector/missing-person-announcement-flyer-hanging-brick-wall_124715-1968.jpg?semt=ais_hybrid'
   ];
 
   return (

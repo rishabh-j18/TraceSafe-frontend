@@ -34,7 +34,7 @@ function App() {
       <Route path="/report" element={<MissingPersonReport />} />
       <Route path="/search" element={<SearchPerson />} />
       <Route path="/flag" element={<FlagLocation />} />
-      <Route path="rolemanagement" element={<RoleManagement />} />
+      <Route path="/rolemanagement" element={<RoleManagement />} />
       <Route path="/detail" element={<Detail />} />
       <Route path="*" element={<NoPage />} />
       

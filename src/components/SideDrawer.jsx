@@ -34,7 +34,7 @@ const SideDrawer = ({ drawerOpen, setDrawerOpen, menuItems }) => {
           boxSizing: "border-box",
           overflowX: "hidden",
           backgroundColor: "white",
-          color: "#147ae4",
+          color: "#682404",
           cursor: "pointer",
           transition: theme.transitions.create("width", {
             easing: theme.transitions.easing.sharp,
@@ -53,7 +53,7 @@ const SideDrawer = ({ drawerOpen, setDrawerOpen, menuItems }) => {
       >
         <IconButton
           onClick={() => setDrawerOpen(!drawerOpen)}
-          sx={{ color: "#147ae4", paddingRight: "30px", fontWeight: "bold" }}
+          sx={{ color: "#682404", paddingRight: "30px", fontWeight: "bold" }}
         >
           <Menu />
         </IconButton>
@@ -70,7 +70,7 @@ const SideDrawer = ({ drawerOpen, setDrawerOpen, menuItems }) => {
             key={index}
             onClick={() => handleNavigation(item.path)}
           >
-            <ListItemIcon sx={{ color: "#147ae4" }}>{item.icon}</ListItemIcon>
+            <ListItemIcon sx={{ color: "#682404" }}>{item.icon}</ListItemIcon>
             {drawerOpen && (
               <ListItemText primary={item.label} sx={{ fontWeight: "bold" }} />
             )}

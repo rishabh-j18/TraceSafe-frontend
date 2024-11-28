@@ -8,6 +8,9 @@ export const createUser= async(user)=>{
 export const loginUser= async(data)=>{
     return apiRequest(`${BACKEND}/login`,'POST',data)
 }
+export const loginUserMeta= async(data)=>{
+    return apiRequest(`${BACKEND}/loginMeta`,'POST',data)
+}
 
 export const forgetUser = async(user)=>{
     return apiRequest(`${BACKEND}/forget`,'POST', user)

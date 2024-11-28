@@ -1,0 +1,33 @@
+/* App.css */
+
+/* Style all MUI buttons with a custom background and text color */
+.MuiButton-root {
+    background-color: #682404 !important; /* Primary button color */
+    color: #ffffff !important;            /* Text color */
+  }
+  
+  /* Style all MUI contained buttons specifically */
+  .MuiButton-contained {
+    background-color: #682404 !important;
+    color: #ffffff !important;
+  }
+  
+  /* Add hover effect for all MUI buttons */
+  .MuiButton-root:hover {
+    background-color: #682404 !important; /* Darker shade on hover */
+  }
+  
+  /* Style outlined buttons differently */
+  .MuiButton-outlined {
+    border-color: #682404 !important;  /* Outline color */
+    color: #ffffff !important;         /* Text color for outlined button */
+  }
+  
+  /* Hover effect for outlined buttons */
+  .MuiButton-outlined:hover {
+    background-color: rgba(104, 36, 4, 0.1) !important;
+    color:#682404 !important;
+  }
+
+  
+  

@@ -1,7 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  Container, TextField, Button, Typography, Box, Grid 
+import {
+  Container,
+  TextField,
+  Button,
+  Typography,
+  Box,
+  Grid
 } from '@mui/material';
 import { motion } from 'framer-motion';
 import GoogleMapReact from 'google-map-react';
@@ -10,11 +15,11 @@ import { flagMissing } from '../services/apiCalls';
 import { toast, ToastContainer } from 'react-toastify';
 
 const FlagLocation = () => {
-  const [location, setLocation] = useState('');
-  const [coordinates, setCoordinates] = useState({ lat: 26.81277, lng:80.909  }); // Default: San Francisco
+  const [coordinates, setCoordinates] = useState({ lat: 26.81277, lng: 80.909 }); // Default location
+  const [address, setAddress] = useState('');
   const [formData, setFormData] = useState({
     location: '',
-    coordinates: { lat: '', lng: '' }, // Store coordinates as JSON
+    coordinates: { lat: '', lng: '' },
     dateTime: '',
     photos: [],
     video: null,
@@ -28,53 +33,47 @@ const FlagLocation = () => {
 
   const navigate = useNavigate();
 
-  const handleInputChange = async (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
-
-    if (name === 'location') {
-      setLocation(value);
-      if (value.trim()) {
-        await fetchCoordinates(value);
-      }
-    }
-  };
-
-  const fetchCoordinates = async (address) => {
+  // Function to fetch address using reverse geocoding
+  const fetchAddressFromCoordinates = async (lat, lng) => {
     try {
       const response = await axios.get(
         `https://maps.googleapis.com/maps/api/geocode/json`,
         {
           params: {
-            address,
-            key: process.env.GOOGLE_MAPS_API_KEY,
+            latlng: `${lat},${lng}`,
+            key: 'google map api key',
           },
         }
       );
-
+      
       const results = response.data.results;
+      console.log(response)
       if (results.length > 0) {
-        const { lat, lng } = results[0].geometry.location;
-        setCoordinates({ lat, lng }); // Update local state
+        const fetchedAddress = results[0].formatted_address;
+        setAddress(fetchedAddress);
         setFormData((prevData) => ({
           ...prevData,
-          coordinates: { lat, lng }, // Store coordinates in formData
+          location: fetchedAddress,
+          coordinates: { lat, lng },
         }));
+        toast.success(`Location selected: ${fetchedAddress}`);
       } else {
-        alert('Location not found. Please enter a valid address.');
+        toast.error('Address not found for the selected location.');
       }
     } catch (error) {
-      console.error('Error fetching coordinates:', error);
-      alert('An error occurred while fetching the coordinates.');
+      console.error('Error fetching address:', error);
+      toast.error('Error fetching address for the selected location.');
     }
   };
 
   const handleMapClick = ({ lat, lng }) => {
     setCoordinates({ lat, lng });
-    setFormData((prevData) => ({
-      ...prevData,
-      coordinates: { lat, lng }, // Store clicked coordinates in formData
-    }));
+    fetchAddressFromCoordinates(lat, lng);
+  };
+
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({ ...formData, [name]: value });
   };
 
   const handleSubmit = async (e) => {
@@ -82,9 +81,6 @@ const FlagLocation = () => {
 
     try {
       const response = await flagMissing(formData);
-      console.log(formData);
-      console.log(response);
-
       if (response.status === 200) {
         toast.success('Submitted successfully');
         setTimeout(() => navigate('/dashboard'), 6000);
@@ -106,25 +102,24 @@ const FlagLocation = () => {
         Please provide the details below to flag the location of the found person.
       </Typography>
       <form onSubmit={handleSubmit}>
-        <motion.div 
-          initial={{ opacity: 0 }} 
-          animate={{ opacity: 1 }} 
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
           style={{ padding: '20px' }}
         >
           <Grid container spacing={2}>
             <Grid item xs={12}>
               <TextField
                 fullWidth
-                label="Location (Address or Coordinates)"
+                label="Selected Location"
                 name="location"
-                value={formData.location}
-                onChange={handleInputChange}
-                required
+                value={formData.location || address}
+                disabled
                 margin="normal"
               />
               <Box height="300px" mb={2}>
                 <GoogleMapReact
-                  bootstrapURLKeys={{ key: process.env.GOOGLE_MAPS_API_KEY }}
+                  bootstrapURLKeys={{ key: process.env.REACT_APP_GOOGLE_MAPS_API_KEY }}
                   center={coordinates}
                   defaultZoom={11}
                   onClick={handleMapClick}
@@ -141,12 +136,21 @@ const FlagLocation = () => {
                 InputLabelProps={{ shrink: true }}
                 margin="normal"
               />
-              <Button variant="contained" component="label" sx={{ mt: 2 }}>
+              <Button
+                variant="contained"
+                component="label"
+                sx={{ mt: 2 }}
+              >
                 Upload Photos
-                <input type="file" hidden multiple onChange={(e) => {
-                  const files = Array.from(e.target.files);
-                  setFormData({ ...formData, photos: files.map(file => URL.createObjectURL(file)) });
-                }} />
+                <input
+                  type="file"
+                  hidden
+                  multiple
+                  onChange={(e) => {
+                    const files = Array.from(e.target.files);
+                    setFormData({ ...formData, photos: files.map((file) => URL.createObjectURL(file)) });
+                  }}
+                />
               </Button>
               {formData.photos.map((photo, index) => (
                 <img
@@ -156,19 +160,6 @@ const FlagLocation = () => {
                   style={{ marginTop: '20px', width: '100%' }}
                 />
               ))}
-              <Button variant="contained" component="label" sx={{ mt: 2 }}>
-                Upload Video
-                <input type="file" hidden onChange={(e) => {
-                  setFormData({ ...formData, video: URL.createObjectURL(e.target.files[0]) });
-                }} />
-              </Button>
-              {formData.video && (
-                <video
-                  src={formData.video}
-                  controls
-                  style={{ marginTop: '20px', width: '100%' }}
-                />
-              )}
               <TextField
                 fullWidth
                 multiline
@@ -197,32 +188,6 @@ const FlagLocation = () => {
                 required
                 margin="normal"
               />
-              <TextField
-                fullWidth
-                label="Witness Name"
-                name="witnessName"
-                value={formData.witnessName}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                label="Witness Contact"
-                name="witnessContact"
-                value={formData.witnessContact}
-                onChange={handleInputChange}
-                margin="normal"
-              />
-              <TextField
-                fullWidth
-                multiline
-                rows={4}
-                label="Additional Notes"
-                name="additionalNotes"
-                value={formData.additionalNotes}
-                onChange={handleInputChange}
-                margin="normal"
-              />
             </Grid>
           </Grid>
           <Box mt={2}>
@@ -232,9 +197,6 @@ const FlagLocation = () => {
           </Box>
         </motion.div>
       </form>
-      <Box mt={4} textAlign="center">
-        <Typography variant="h6">Reward: 100 Coins</Typography>
-      </Box>
     </Container>
   );
 };

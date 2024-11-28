@@ -12,7 +12,6 @@ import {
   Grid,
 } from "@mui/material";
 import { motion } from "framer-motion";
-import { styled } from "@mui/system";
 import { submitMissingPersonReport } from "../services/apiCalls";
 import { toast,ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
@@ -132,7 +131,6 @@ const MissingPersonReport = () => {
     }
   };
   
-
   return (
     <Container maxWidth="md" sx={{ mt: 4, mb: 4 }}>
 

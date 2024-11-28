@@ -9,7 +9,6 @@ import {
   Typography,
   Box,
 } from "@mui/material";
-import PlaylistAddIcon from "@mui/icons-material/PlaylistAdd";
 import { getMissingPerson } from "../services/apiCalls";
 import { useNavigate } from "react-router-dom";
 
@@ -121,12 +120,6 @@ const SearchPerson = () => {
                   </Grid>
                 </Grid>
                 <Box display="flex" justifyContent="flex-end" p={3}>
-                  <Button
-                    endIcon={<PlaylistAddIcon />}
-                    onClick={() => (window.location.href = `/person/${person._id}`)} // Use person._id for the URL
-                  >
-                    More Details
-                  </Button>
                   <Button 
                     onClick={()=>navigate('/flag')}
                     sx={{ backgroundColor: "#147ae4", color: "white", margin: '10px' }}

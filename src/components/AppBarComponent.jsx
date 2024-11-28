@@ -24,6 +24,7 @@ import { useNavigate } from 'react-router-dom';
 import useMediaQuery from '@mui/material/useMediaQuery';
 import { useTheme } from '@mui/material/styles';
 import { useAuth } from '../AuthContext'; // Import useAuth
+import NotificationDropdown from './NotificationDropdown';
 
 const AppBarComponent = () => {
   const { isLoggedIn, logout } = useAuth(); // Access user status and logout function
@@ -69,7 +70,7 @@ const AppBarComponent = () => {
   const menuItems = isLoggedIn ? loggedInMenuItems : loggedOutMenuItems;
 
   return (
-    <AppBar position="static" sx={{ backgroundColor: '#147ae4', paddingLeft: 5, paddingRight: 5 }}>
+    <AppBar position="static" sx={{ backgroundColor: '#682404', paddingLeft: 5, paddingRight: 5 }}>
       <Toolbar>
         {/* App Title */}
         <Typography
@@ -139,6 +140,7 @@ const AppBarComponent = () => {
             </motion.div>
           ))
         )}
+        <NotificationDropdown/>
       </Toolbar>
     </AppBar>
   );
